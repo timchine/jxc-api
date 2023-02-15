@@ -6,8 +6,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func channelRouter(r *gin.RouterGroup, db *gorm.DB) {
+func customerRouter(r *gin.RouterGroup, db *gorm.DB) {
 	a := api.NewChannelApi(db)
-	r.POST("channel", a.AddChannel())
-	r.PUT("channel", a.EditChannel())
+	r.POST("customer", a.AddChannel())
+	r.PUT("customer", a.EditChannel())
 }

@@ -13,14 +13,14 @@ import (
 )
 
 func routers(r *gin.RouterGroup, db *gorm.DB) {
-	channelRouter(r, db)
+	customerRouter(r, db)
 }
 
 func Run(db *gorm.DB) app.DaemonFunc {
 	return func(ctx context.Context) error {
 		router := gin.New()
 		router.Use(LogHandler, Recovery)
-		routers(router.Group("/jxc/"), db)
+		routers(router.Group("/api/jxc/"), db)
 		return router.Run(viper.GetString("server.addr"))
 	}
 }
