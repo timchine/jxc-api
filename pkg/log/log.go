@@ -69,6 +69,6 @@ func Logger() *zap.Logger {
 }
 
 func timeEncoder(time time.Time, encoder zapcore.PrimitiveArrayEncoder) {
-	s := fmt.Sprintf(
-
+	s := fmt.Sprintf("\x1b[0;33m%s\x1b[0m", time.Format("[2006-01-02 15:04:05]"))
+	encoder.AppendString(s)
 }

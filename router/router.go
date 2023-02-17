@@ -14,6 +14,7 @@ import (
 
 func routers(r *gin.RouterGroup, db *gorm.DB) {
 	customerRouter(r, db)
+	cargoRouter(r, db)
 }
 
 func Run(db *gorm.DB) app.DaemonFunc {
