@@ -38,6 +38,22 @@ func (c *cargoApi) AddCargoKind() gin.HandlerFunc {
 			res.Error(ctx, 500, "参数错误")
 			return
 		}
-
+		tx := c.Begin()
+		err = tx.Create(&req.CargoKind).Error
+		if err != nil {
+			Log().Error(err.Error())
+			tx.Rollback()
+			res.Error(ctx, 500, "新增失败")
+			return
+		}
+		err = tx.Create(&req.CargoAttrs).Error
+		if err != nil {
+			Log().Error(err.Error())
+			tx.Rollback()
+			res.Error(ctx, 500, "新增失败")
+			return
+		}
+		tx.Commit()
+		res.Success(ctx, 200)
 	}
 }
