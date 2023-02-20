@@ -2,7 +2,6 @@ package log
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"go.uber.org/zap"
@@ -18,7 +17,7 @@ func NewLogger(mode string, level zapcore.Level) error {
 	var (
 		logConfig zap.Config
 		err       error
-		file      *os.File
+		//file      *os.File
 	)
 	switch mode {
 	case "", MODE_DEV:
@@ -28,24 +27,24 @@ func NewLogger(mode string, level zapcore.Level) error {
 		logConfig.Sampling = &zap.SamplingConfig{
 			Initial:    100,
 			Thereafter: 100,
-			Hook: func(message zapcore.Entry, deci zapcore.SamplingDecision) {
-				if file == nil {
-					file, err = os.OpenFile(time.Now().Format("2006-01-02")+".log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766)
-					if err != nil {
-						fmt.Println(err)
-						return
-					}
-				}
-				if file.Name() != time.Now().Format("2006-01-02")+".log" {
-					file.Close()
-					file, err = os.OpenFile(time.Now().Format("2006-01-02")+".log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766)
-					if err != nil {
-						fmt.Println(err)
-						return
-					}
-				}
-				file.WriteString(message.Message + "\n")
-			},
+			//Hook: func(message zapcore.Entry, deci zapcore.SamplingDecision) {
+			//	if file == nil {
+			//		file, err = os.OpenFile(time.Now().Format("2006-01-02")+".log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766)
+			//		if err != nil {
+			//			fmt.Println(err)
+			//			return
+			//		}
+			//	}
+			//	if file.Name() != time.Now().Format("2006-01-02")+".log" {
+			//		file.Close()
+			//		file, err = os.OpenFile(time.Now().Format("2006-01-02")+".log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766)
+			//		if err != nil {
+			//			fmt.Println(err)
+			//			return
+			//		}
+			//	}
+			//	file.WriteString(message.Message + "\n")
+			//},
 		}
 		logConfig.EncoderConfig.EncodeTime = timeEncoder
 		logConfig.EncoderConfig.EncodeLevel = func(l zapcore.Level, pae zapcore.PrimitiveArrayEncoder) {}

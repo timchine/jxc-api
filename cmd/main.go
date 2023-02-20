@@ -13,6 +13,11 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+// @title 进销存系统
+// @version 1.0
+// @description 以实现无纸化办公为目标
+// @host
+// @BasePath /api/jxc
 func main() {
 	var (
 		db *gorm.DB

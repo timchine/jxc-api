@@ -4,6 +4,9 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/timchine/jxc/docs"
 	"github.com/timchine/jxc/pkg/app"
 	"github.com/timchine/jxc/pkg/log"
 	"go.uber.org/zap"
@@ -13,6 +16,8 @@ import (
 )
 
 func routers(r *gin.RouterGroup, db *gorm.DB) {
+	docs.SwaggerInfo.BasePath = "/api/jxc"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	customerRouter(r, db)
 	cargoRouter(r, db)
 }

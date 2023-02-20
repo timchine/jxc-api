@@ -1,0 +1,83 @@
+basePath: /api/jxc
+definitions:
+  dto.ReqAddCargoKind:
+    properties:
+      cargo_attrs:
+        items:
+          $ref: '#/definitions/model.CargoAttr'
+        type: array
+      cargo_kind:
+        $ref: '#/definitions/model.CargoKind'
+    type: object
+  model.CargoAttr:
+    properties:
+      attr_name:
+        description: 属性名称
+        type: string
+      attr_value:
+        description: 属性值 ｜ 符号分割
+        type: string
+      ca_id:
+        description: 属性ID
+        type: integer
+      ck_id:
+        description: 关联货品种类
+        type: integer
+      created_at:
+        type: string
+      status:
+        description: 状态 1 正常 8 删除
+        type: integer
+      type:
+        description: 1 选择 2 文本
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  model.CargoKind:
+    properties:
+      ck_code:
+        description: 货品编码
+        type: string
+      ck_id:
+        type: integer
+      ck_name:
+        description: 货品名称
+        type: string
+      created_at:
+        type: string
+      intro:
+        description: 货品简介
+        type: string
+      status:
+        description: 状态 1 正常 8 删除
+        type: integer
+      type:
+        description: 1:原材料 2:半成品 3:成品
+        type: integer
+      updated_at:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: 以实现无纸化办公为目标
+  title: 进销存系统
+  version: "1.0"
+paths:
+  /cargo_kind:
+    post:
+      consumes:
+      - application/json
+      description: 新增货品种类，新增种类时同时新增种类相关规格属性
+      parameters:
+      - description: 货品种类和属性
+        in: body
+        name: 货品种类
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReqAddCargoKind'
+      produces:
+      - application/json
+      responses: {}
+      summary: 新增货品种类
+swagger: "2.0"

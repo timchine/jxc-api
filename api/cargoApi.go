@@ -18,6 +18,13 @@ func NewCargoApi(db *gorm.DB) ICargoApi {
 	return &cargoApi{DB: db}
 }
 
+// @Summary 新增货品种类
+// @Description 新增货品种类，新增种类时同时新增种类相关规格属性
+// @Accept  json
+// @Produce  json
+// @Param 货品种类 body dto.ReqAddCargoKind true "货品种类和属性"
+// @Reponse 200 {object} Response "status 200 表示成功 否则提示msg内容"
+// @Router /cargo_kind [post]
 func (c *cargoApi) AddCargoKind() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var (
@@ -31,6 +38,22 @@ func (c *cargoApi) AddCargoKind() gin.HandlerFunc {
 			res.Error(ctx, 500, "参数错误")
 			return
 		}
-
+		tx := c.Begin()
+		err = tx.Create(&req.CargoKind).Error
+		if err != nil {
+			Log().Error(err.Error())
+			tx.Rollback()
+			res.Error(ctx, 500, "新增失败")
+			return
+		}
+		err = tx.Create(&req.CargoAttrs).Error
+		if err != nil {
+			Log().Error(err.Error())
+			tx.Rollback()
+			res.Error(ctx, 500, "新增失败")
+			return
+		}
+		tx.Commit()
+		res.Success(ctx, 200)
 	}
 }
