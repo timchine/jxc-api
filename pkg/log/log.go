@@ -2,6 +2,7 @@ package log
 
 import (
 	"fmt"
+	logger2 "gorm.io/gorm/logger"
 	"time"
 
 	"go.uber.org/zap"
@@ -9,8 +10,8 @@ import (
 )
 
 const (
-	MODE_DEV  = "dev"
-	MODE_PROD = "prod"
+	ModeDev  = "dev"
+	ModeProd = "prod"
 )
 
 func NewLogger(mode string, level zapcore.Level) error {
@@ -20,7 +21,7 @@ func NewLogger(mode string, level zapcore.Level) error {
 		//file      *os.File
 	)
 	switch mode {
-	case "", MODE_DEV:
+	case "", ModeDev:
 		logConfig = zap.NewDevelopmentConfig()
 		logConfig.Level = zap.NewAtomicLevelAt(level)
 		logConfig.DisableCaller = true
@@ -49,7 +50,7 @@ func NewLogger(mode string, level zapcore.Level) error {
 		logConfig.EncoderConfig.EncodeTime = timeEncoder
 		logConfig.EncoderConfig.EncodeLevel = func(l zapcore.Level, pae zapcore.PrimitiveArrayEncoder) {}
 		// logConfig.EncoderConfig.EncodeCaller = zapcore.FullCallerEncoder
-	case MODE_PROD:
+	case ModeProd:
 		logConfig = zap.NewProductionConfig()
 		logConfig.Level = zap.NewAtomicLevelAt(level)
 	default:
@@ -70,4 +71,19 @@ func Logger() *zap.Logger {
 func timeEncoder(time time.Time, encoder zapcore.PrimitiveArrayEncoder) {
 	s := fmt.Sprintf("\x1b[0;33m%s\x1b[0m", time.Format("[2006-01-02 15:04:05]"))
 	encoder.AppendString(s)
+}
+
+type ormLog struct {
+	*zap.Logger
+}
+
+func NewOrmLog() logger2.Writer {
+	return &ormLog{
+		logger,
+	}
+}
+
+func (o *ormLog) Printf(s string, i ...interface{}) {
+	fmt.Println(123)
+	o.Logger.Info(fmt.Sprintf(s, i...))
 }

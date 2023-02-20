@@ -5,8 +5,8 @@ CREATE TABLE `cargo_kind` (
   `intro` varchar(255) DEFAULT NULL COMMENT '简介',
   `type` tinyint DEFAULT NULL COMMENT '1 原材料 2 半成品 3 成品',
   `status` tinyint DEFAULT NULL COMMENT '1 正常 8 删除',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`ck_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='货物种类表';
 
@@ -17,8 +17,8 @@ CREATE TABLE `measure` (
    `unit` varchar(50) DEFAULT NULL COMMENT '单位',
    `calc` varchar(200) DEFAULT NULL COMMENT '单位换算公式',
    `status` tinyint DEFAULT NULL COMMENT '1正常 8 删除',
-   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+   `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    PRIMARY KEY (`measure_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='货品计量单位';
 
@@ -29,8 +29,8 @@ CREATE TABLE `cargo_attr` (
    `attr_value` varchar(500) DEFAULT NULL COMMENT '属性值多个属性用｜分割',
    `type` tinyint DEFAULT NULL COMMENT '1选择 2文本',
    `status` tinyint DEFAULT NULL COMMENT '1正常 8 删除',
-   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+   `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    PRIMARY KEY (`ca_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='货品属性表';
 
@@ -40,8 +40,8 @@ CREATE TABLE `cargo_attr_value` (
   `cargo_name` varchar(50) DEFAULT NULL COMMENT '货物名称',
   `cargo_code` varchar(50) DEFAULT NULL COMMENT '货物编码',
   `status` tinyint DEFAULT NULL COMMENT '1正常 8 删除',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`cargo_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='货品表';
 
@@ -52,8 +52,8 @@ CREATE TABLE `cargo` (
  `attr_name` varchar(50) DEFAULT NULL COMMENT '属性名称',
  `attr_value` varchar(50) DEFAULT NULL COMMENT '属性值',
  `status` tinyint DEFAULT NULL COMMENT '1正常 8 删除',
- `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
- `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+ `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  PRIMARY KEY (`cav_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='货品表';
 

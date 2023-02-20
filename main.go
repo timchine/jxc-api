@@ -5,24 +5,26 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"github.com/timchine/jxc/pkg/app"
-	"github.com/timchine/jxc/pkg/log"
+	log "github.com/timchine/jxc/pkg/log"
 	"github.com/timchine/jxc/router"
 	"go.uber.org/zap/zapcore"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"time"
 )
 
-// @title 进销存系统
-// @version 1.0
-// @description 以实现无纸化办公为目标
-// @host
-// @BasePath /api/jxc
+//	@title			进销存系统
+//	@version		1.0
+//	@description	以实现无纸化办公为目标
+//	@host
+//	@BasePath	/api/jxc
 func main() {
 	var (
 		db *gorm.DB
 	)
-	a, err := app.NewApp("jxc", log.MODE_DEV, zapcore.InfoLevel)
+	a, err := app.NewApp("jxc", log.ModeDev, zapcore.InfoLevel)
 	if err != nil {
 		log.Logger().Error(err.Error())
 		return
@@ -55,11 +57,20 @@ func initDatabase(db **gorm.DB) app.StageFunc {
 			maxOpen  = viper.GetInt("mysql.maxOpenConn")
 			err      error
 		)
-
+		newLogger := logger.New(
+			log.NewOrmLog(),
+			logger.Config{
+				SlowThreshold:             time.Second, // 慢 SQL 阈值
+				LogLevel:                  logger.Info, // 日志级别
+				IgnoreRecordNotFoundError: true,        // 忽略ErrRecordNotFound（记录未找到）错误
+				Colorful:                  false,       // 禁用彩色打印
+			},
+		)
 		*db, err = gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 			user, password, host, port, jxc)), &gorm.Config{NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
-		}})
+		},
+			Logger: newLogger})
 		if err != nil {
 			return nil, err
 		}

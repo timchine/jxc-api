@@ -1,5 +1,13 @@
 basePath: /api/jxc
 definitions:
+  api.Response:
+    properties:
+      data: {}
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
   dto.ReqAddCargoKind:
     properties:
       cargo_attrs:
@@ -24,7 +32,7 @@ definitions:
         description: 关联货品种类
         type: integer
       created_at:
-        type: string
+        type: integer
       status:
         description: 状态 1 正常 8 删除
         type: integer
@@ -32,7 +40,7 @@ definitions:
         description: 1 选择 2 文本
         type: integer
       updated_at:
-        type: string
+        type: integer
     type: object
   model.CargoKind:
     properties:
@@ -45,7 +53,7 @@ definitions:
         description: 货品名称
         type: string
       created_at:
-        type: string
+        type: integer
       intro:
         description: 货品简介
         type: string
@@ -56,7 +64,7 @@ definitions:
         description: 1:原材料 2:半成品 3:成品
         type: integer
       updated_at:
-        type: string
+        type: integer
     type: object
 info:
   contact: {}
@@ -78,6 +86,10 @@ paths:
           $ref: '#/definitions/dto.ReqAddCargoKind'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/api.Response'
       summary: 新增货品种类
 swagger: "2.0"
