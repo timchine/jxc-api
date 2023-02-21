@@ -16,6 +16,35 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/cargo_kind": {
+            "put": {
+                "description": "修改货品种类",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "修改货品种类",
+                "parameters": [
+                    {
+                        "description": "货品种类和属性",
+                        "name": "货品种类",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ReqAddCargoKind"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "新增货品种类，新增种类时同时新增种类相关规格属性",
                 "consumes": [
@@ -46,6 +75,31 @@ const docTemplate = `{
                 }
             }
         },
+        "/cargo_kind/_search": {
+            "get": {
+                "description": "通过货品code 或者 货品名称搜索 货品种类",
+                "summary": "搜索货品种类",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "货品code 或者 货品名称",
+                        "name": "search",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.ReqAddCargoKind"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/cargo_kind/{ck_id}": {
             "get": {
                 "description": "获取货品详情，获取货品详情和相关属性",
@@ -54,7 +108,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "货品种类ID",
-                        "name": "id",
+                        "name": "ck_id",
                         "in": "path",
                         "required": true
                     }
@@ -64,6 +118,27 @@ const docTemplate = `{
                         "description": "status 200 表示成功 否则提示msg内容",
                         "schema": {
                             "$ref": "#/definitions/dto.ReqAddCargoKind"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除货品",
+                "summary": "删除货品",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "货品种类ID",
+                        "name": "ck_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
                         }
                     }
                 }
@@ -135,6 +210,12 @@ const docTemplate = `{
         "model.CargoKind": {
             "type": "object",
             "properties": {
+                "cargo_attrs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.CargoAttr"
+                    }
+                },
                 "ck_code": {
                     "description": "货品编码",
                     "type": "string"

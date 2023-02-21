@@ -44,6 +44,10 @@ definitions:
     type: object
   model.CargoKind:
     properties:
+      cargo_attrs:
+        items:
+          $ref: '#/definitions/model.CargoAttr'
+        type: array
       ck_code:
         description: 货品编码
         type: string
@@ -92,13 +96,62 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增货品种类
+    put:
+      consumes:
+      - application/json
+      description: 修改货品种类
+      parameters:
+      - description: 货品种类和属性
+        in: body
+        name: 货品种类
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReqAddCargoKind'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 修改货品种类
+  /cargo_kind/_search:
+    get:
+      description: 通过货品code 或者 货品名称搜索 货品种类
+      parameters:
+      - description: 货品code 或者 货品名称
+        in: query
+        name: search
+        type: string
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            items:
+              $ref: '#/definitions/dto.ReqAddCargoKind'
+            type: array
+      summary: 搜索货品种类
   /cargo_kind/{ck_id}:
+    delete:
+      description: 删除货品
+      parameters:
+      - description: 货品种类ID
+        in: path
+        name: ck_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除货品
     get:
       description: 获取货品详情，获取货品详情和相关属性
       parameters:
       - description: 货品种类ID
         in: path
-        name: id
+        name: ck_id
         required: true
         type: integer
       responses:

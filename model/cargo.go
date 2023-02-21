@@ -14,12 +14,13 @@ type Measure struct {
 // 货物 分类
 type CargoKind struct {
 	Model
-	CkID   int    `json:"ck_id" gorm:"primaryKey;autoIncrement"`
-	CkCode string `json:"ck_code"` //货品编码
-	CkName string `json:"ck_name"` //货品名称
-	Intro  string `json:"intro"`   //货品简介
-	Type   int    `json:"type"`    //1:原材料 2:半成品 3:成品
-	Status int    `json:"status"`  //状态 1 正常 8 删除
+	CkID       int         `json:"ck_id" gorm:"primaryKey;autoIncrement"`
+	CkCode     string      `json:"ck_code"` //货品编码
+	CkName     string      `json:"ck_name"` //货品名称
+	Intro      string      `json:"intro"`   //货品简介
+	Type       int         `json:"type"`    //1:原材料 2:半成品 3:成品
+	Status     int         `json:"status"`  //状态 1 正常 8 删除
+	CargoAttrs []CargoAttr `json:"cargo_attrs" gorm:"foreignkey:CkID"`
 }
 
 // 货物属性
