@@ -92,4 +92,19 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增货品种类
+  /cargo_kind/{ck_id}:
+    get:
+      description: 获取货品详情，获取货品详情和相关属性
+      parameters:
+      - description: 货品种类ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/dto.ReqAddCargoKind'
+      summary: 获取货品详情
 swagger: "2.0"

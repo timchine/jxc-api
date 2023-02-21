@@ -84,6 +84,5 @@ func NewOrmLog() logger2.Writer {
 }
 
 func (o *ormLog) Printf(s string, i ...interface{}) {
-	fmt.Println(123)
 	o.Logger.Info(fmt.Sprintf(s, i...))
 }

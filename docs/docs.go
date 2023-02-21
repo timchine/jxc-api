@@ -45,6 +45,29 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/cargo_kind/{ck_id}": {
+            "get": {
+                "description": "获取货品详情，获取货品详情和相关属性",
+                "summary": "获取货品详情",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "货品种类ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ReqAddCargoKind"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
