@@ -8,6 +8,37 @@
     },
     "basePath": "/api/jxc",
     "paths": {
+        "/cargo": {
+            "post": {
+                "description": "此接口用于新增原材料或制品， 新增时包括 计量和属性值",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "新增货品",
+                "parameters": [
+                    {
+                        "description": "货品种类和属性",
+                        "name": "货品种类",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ReqAddCargo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/cargo_kind": {
             "put": {
                 "description": "修改货品种类",
@@ -25,7 +56,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ReqAddCargoKind"
+                            "$ref": "#/definitions/dto.CargoKindWithAttrs"
                         }
                     }
                 ],
@@ -54,7 +85,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.ReqAddCargoKind"
+                            "$ref": "#/definitions/dto.CargoKindWithAttrs"
                         }
                     }
                 ],
@@ -78,6 +109,18 @@
                         "description": "货品code 或者 货品名称",
                         "name": "search",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页条数",
+                        "name": "size",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -86,7 +129,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/dto.ReqAddCargoKind"
+                                "$ref": "#/definitions/model.CargoKind"
                             }
                         }
                     }
@@ -110,7 +153,7 @@
                     "200": {
                         "description": "status 200 表示成功 否则提示msg内容",
                         "schema": {
-                            "$ref": "#/definitions/dto.ReqAddCargoKind"
+                            "$ref": "#/definitions/dto.CargoKindWithAttrs"
                         }
                     }
                 }
@@ -151,7 +194,7 @@
                 }
             }
         },
-        "dto.ReqAddCargoKind": {
+        "dto.CargoKindWithAttrs": {
             "type": "object",
             "properties": {
                 "cargo_attrs": {
@@ -162,6 +205,57 @@
                 },
                 "cargo_kind": {
                     "$ref": "#/definitions/model.CargoKind"
+                }
+            }
+        },
+        "dto.ReqAddCargo": {
+            "type": "object",
+            "properties": {
+                "cargo": {
+                    "$ref": "#/definitions/model.Cargo"
+                },
+                "cargo_attr_values": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.CargoAttrValue"
+                    }
+                },
+                "measures": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Measure"
+                    }
+                }
+            }
+        },
+        "model.Cargo": {
+            "type": "object",
+            "properties": {
+                "cargo_code": {
+                    "description": "货品编码",
+                    "type": "string"
+                },
+                "cargo_id": {
+                    "description": "货品ID",
+                    "type": "integer"
+                },
+                "cargo_name": {
+                    "description": "货品名称",
+                    "type": "string"
+                },
+                "ck_id": {
+                    "description": "货品种类ID",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态 1 正常 8 删除",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
                 }
             }
         },
@@ -200,15 +294,44 @@
                 }
             }
         },
+        "model.CargoAttrValue": {
+            "type": "object",
+            "properties": {
+                "attr_name": {
+                    "description": "属性名称",
+                    "type": "string"
+                },
+                "ca_id": {
+                    "description": "货物属性ID",
+                    "type": "integer"
+                },
+                "cargo_id": {
+                    "description": "货物ID",
+                    "type": "integer"
+                },
+                "cav_id": {
+                    "description": "ID",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态 1 正常 8 删除",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "value": {
+                    "description": "属性值",
+                    "type": "string"
+                }
+            }
+        },
         "model.CargoKind": {
             "type": "object",
             "properties": {
-                "cargo_attrs": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.CargoAttr"
-                    }
-                },
                 "ck_code": {
                     "description": "货品编码",
                     "type": "string"
@@ -234,6 +357,40 @@
                 "type": {
                     "description": "1:原材料 2:半成品 3:成品",
                     "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Measure": {
+            "type": "object",
+            "properties": {
+                "calc": {
+                    "description": "换算公式",
+                    "type": "string"
+                },
+                "cargo_id": {
+                    "description": "关联货品",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "is_base": {
+                    "description": "是否为基础计量单位",
+                    "type": "boolean"
+                },
+                "measure_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态 1 正常 8 删除",
+                    "type": "integer"
+                },
+                "unit": {
+                    "description": "单位",
+                    "type": "string"
                 },
                 "updated_at": {
                     "type": "integer"

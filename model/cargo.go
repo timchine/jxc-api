@@ -4,23 +4,22 @@ package model
 type Measure struct {
 	Model
 	MeasureID int    `json:"measure_id"`
-	CkID      int    `json:"ck_id"`   //关联货品种类
-	IsBase    bool   `json:"is_base"` //是否为基础计量单位
-	Unit      string `json:"unit"`    //单位
-	Calc      string `json:"calc"`    //换算公式
-	Status    int    `json:"status"`  //状态 1 正常 8 删除
+	CargoID   int    `json:"cargo_id"` //关联货品
+	IsBase    bool   `json:"is_base"`  //是否为基础计量单位
+	Unit      string `json:"unit"`     //单位
+	Calc      string `json:"calc"`     //换算公式
+	Status    int    `json:"status"`   //状态 1 正常 8 删除
 }
 
 // 货物 分类
 type CargoKind struct {
 	Model
-	CkID       int         `json:"ck_id" gorm:"primaryKey;autoIncrement"`
-	CkCode     string      `json:"ck_code"` //货品编码
-	CkName     string      `json:"ck_name"` //货品名称
-	Intro      string      `json:"intro"`   //货品简介
-	Type       int         `json:"type"`    //1:原材料 2:半成品 3:成品
-	Status     int         `json:"status"`  //状态 1 正常 8 删除
-	CargoAttrs []CargoAttr `json:"cargo_attrs" gorm:"foreignkey:CkID"`
+	CkID   int    `json:"ck_id" gorm:"primaryKey;autoIncrement"`
+	CkCode string `json:"ck_code"` //货品编码
+	CkName string `json:"ck_name"` //货品名称
+	Intro  string `json:"intro"`   //货品简介
+	Type   int    `json:"type"`    //1:原材料 2:半成品 3:成品
+	Status int    `json:"status"`  //状态 1 正常 8 删除
 }
 
 // 货物属性

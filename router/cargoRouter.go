@@ -8,9 +8,12 @@ import (
 
 func cargoRouter(r *gin.RouterGroup, db *gorm.DB) {
 	a := api.NewCargoApi(db)
+	//货品种类
 	r.POST("cargo_kind", a.AddCargoKind())
 	r.GET("cargo_kind/:ck_id", a.GetCargoKind())
 	r.PUT("cargo_kind", a.UpdateCargoKind())
 	r.DELETE("cargo_kind/:ck_id", a.DeleteCargoKind())
 	r.GET("cargo_kind/_search", a.SearchCargoKind())
+
+	r.POST("cargo", a.AddCargo())
 }

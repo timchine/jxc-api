@@ -8,7 +8,7 @@ definitions:
       status:
         type: integer
     type: object
-  dto.ReqAddCargoKind:
+  dto.CargoKindWithAttrs:
     properties:
       cargo_attrs:
         items:
@@ -16,6 +16,41 @@ definitions:
         type: array
       cargo_kind:
         $ref: '#/definitions/model.CargoKind'
+    type: object
+  dto.ReqAddCargo:
+    properties:
+      cargo:
+        $ref: '#/definitions/model.Cargo'
+      cargo_attr_values:
+        items:
+          $ref: '#/definitions/model.CargoAttrValue'
+        type: array
+      measures:
+        items:
+          $ref: '#/definitions/model.Measure'
+        type: array
+    type: object
+  model.Cargo:
+    properties:
+      cargo_code:
+        description: 货品编码
+        type: string
+      cargo_id:
+        description: 货品ID
+        type: integer
+      cargo_name:
+        description: 货品名称
+        type: string
+      ck_id:
+        description: 货品种类ID
+        type: integer
+      created_at:
+        type: integer
+      status:
+        description: 状态 1 正常 8 删除
+        type: integer
+      updated_at:
+        type: integer
     type: object
   model.CargoAttr:
     properties:
@@ -42,12 +77,33 @@ definitions:
       updated_at:
         type: integer
     type: object
+  model.CargoAttrValue:
+    properties:
+      attr_name:
+        description: 属性名称
+        type: string
+      ca_id:
+        description: 货物属性ID
+        type: integer
+      cargo_id:
+        description: 货物ID
+        type: integer
+      cav_id:
+        description: ID
+        type: integer
+      created_at:
+        type: integer
+      status:
+        description: 状态 1 正常 8 删除
+        type: integer
+      updated_at:
+        type: integer
+      value:
+        description: 属性值
+        type: string
+    type: object
   model.CargoKind:
     properties:
-      cargo_attrs:
-        items:
-          $ref: '#/definitions/model.CargoAttr'
-        type: array
       ck_code:
         description: 货品编码
         type: string
@@ -70,12 +126,56 @@ definitions:
       updated_at:
         type: integer
     type: object
+  model.Measure:
+    properties:
+      calc:
+        description: 换算公式
+        type: string
+      cargo_id:
+        description: 关联货品
+        type: integer
+      created_at:
+        type: integer
+      is_base:
+        description: 是否为基础计量单位
+        type: boolean
+      measure_id:
+        type: integer
+      status:
+        description: 状态 1 正常 8 删除
+        type: integer
+      unit:
+        description: 单位
+        type: string
+      updated_at:
+        type: integer
+    type: object
 info:
   contact: {}
   description: 以实现无纸化办公为目标
   title: 进销存系统
   version: "1.0"
 paths:
+  /cargo:
+    post:
+      consumes:
+      - application/json
+      description: 此接口用于新增原材料或制品， 新增时包括 计量和属性值
+      parameters:
+      - description: 货品种类和属性
+        in: body
+        name: 货品种类
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReqAddCargo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增货品
   /cargo_kind:
     post:
       consumes:
@@ -87,7 +187,7 @@ paths:
         name: 货品种类
         required: true
         schema:
-          $ref: '#/definitions/dto.ReqAddCargoKind'
+          $ref: '#/definitions/dto.CargoKindWithAttrs'
       produces:
       - application/json
       responses:
@@ -106,7 +206,7 @@ paths:
         name: 货品种类
         required: true
         schema:
-          $ref: '#/definitions/dto.ReqAddCargoKind'
+          $ref: '#/definitions/dto.CargoKindWithAttrs'
       produces:
       - application/json
       responses:
@@ -123,12 +223,20 @@ paths:
         in: query
         name: search
         type: string
+      - description: 页数
+        in: query
+        name: page
+        type: string
+      - description: 每页条数
+        in: query
+        name: size
+        type: string
       responses:
         "200":
           description: status 200 表示成功 否则提示msg内容
           schema:
             items:
-              $ref: '#/definitions/dto.ReqAddCargoKind'
+              $ref: '#/definitions/model.CargoKind'
             type: array
       summary: 搜索货品种类
   /cargo_kind/{ck_id}:
@@ -158,6 +266,6 @@ paths:
         "200":
           description: status 200 表示成功 否则提示msg内容
           schema:
-            $ref: '#/definitions/dto.ReqAddCargoKind'
+            $ref: '#/definitions/dto.CargoKindWithAttrs'
       summary: 获取货品详情
 swagger: "2.0"
