@@ -17,3 +17,9 @@ type ReqAddCargo struct {
 	Cargo           model.Cargo            `json:"cargo"`
 	CargoAttrValues []model.CargoAttrValue `json:"cargo_attr_values"`
 }
+
+type ReqSearchCargo struct {
+	Search string `json:"search"`
+	Type   string `json:"type"`
+	PageData
+}

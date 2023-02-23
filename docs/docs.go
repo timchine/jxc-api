@@ -16,6 +16,35 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/cargo": {
+            "put": {
+                "description": "修改货品",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "修改货品",
+                "parameters": [
+                    {
+                        "description": "货品和属性 和计量单位",
+                        "name": "ReqAddCargo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ReqAddCargo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "此接口用于新增原材料或制品， 新增时包括 计量和属性值",
                 "consumes": [
@@ -27,13 +56,101 @@ const docTemplate = `{
                 "summary": "新增货品",
                 "parameters": [
                     {
-                        "description": "货品种类和属性",
-                        "name": "货品种类",
+                        "description": "货品和属性 和计量单位",
+                        "name": "ReqAddCargo",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/dto.ReqAddCargo"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/cargo/_search": {
+            "get": {
+                "description": "通过货品code 或者 货品名称搜索 货品 (可以是原材料 和制品)",
+                "summary": "搜索货品",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "货品code 或者 货品名称",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "类型 1:原材料 2:半成品 3:成品",
+                        "name": "type",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "页数",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "每页条数",
+                        "name": "size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CargoKind"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cargo/{cargo_id}": {
+            "get": {
+                "description": "获取货品详情",
+                "summary": "获取货品详情",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "货品ID",
+                        "name": "cargo_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ReqAddCargo"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除货品",
+                "summary": "删除货品",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "货品ID",
+                        "name": "cargo_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {

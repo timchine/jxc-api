@@ -16,4 +16,8 @@ func cargoRouter(r *gin.RouterGroup, db *gorm.DB) {
 	r.GET("cargo_kind/_search", a.SearchCargoKind())
 
 	r.POST("cargo", a.AddCargo())
+	r.DELETE("cargo/:cargo_id", a.DeleteCargo())
+	r.PUT("cargo", a.UpdateCargo())
+	r.GET("cargo/:cargo_id", a.GetCargo())
+	r.GET("cargo/_search", a.SearchCargo())
 }

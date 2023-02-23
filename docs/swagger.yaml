@@ -162,9 +162,9 @@ paths:
       - application/json
       description: 此接口用于新增原材料或制品， 新增时包括 计量和属性值
       parameters:
-      - description: 货品种类和属性
+      - description: 货品和属性 和计量单位
         in: body
-        name: 货品种类
+        name: ReqAddCargo
         required: true
         schema:
           $ref: '#/definitions/dto.ReqAddCargo'
@@ -176,6 +176,83 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增货品
+    put:
+      consumes:
+      - application/json
+      description: 修改货品
+      parameters:
+      - description: 货品和属性 和计量单位
+        in: body
+        name: ReqAddCargo
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReqAddCargo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 修改货品
+  /cargo/_search:
+    get:
+      description: 通过货品code 或者 货品名称搜索 货品 (可以是原材料 和制品)
+      parameters:
+      - description: 货品code 或者 货品名称
+        in: query
+        name: search
+        type: string
+      - description: 类型 1:原材料 2:半成品 3:成品
+        in: query
+        name: type
+        required: true
+        type: string
+      - description: 页数
+        in: query
+        name: page
+        type: string
+      - description: 每页条数
+        in: query
+        name: size
+        type: string
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            items:
+              $ref: '#/definitions/model.CargoKind'
+            type: array
+      summary: 搜索货品
+  /cargo/{cargo_id}:
+    delete:
+      description: 删除货品
+      parameters:
+      - description: 货品ID
+        in: path
+        name: cargo_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除货品
+    get:
+      description: 获取货品详情
+      parameters:
+      - description: 货品ID
+        in: path
+        name: cargo_id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/dto.ReqAddCargo'
+      summary: 获取货品详情
   /cargo_kind:
     post:
       consumes:
