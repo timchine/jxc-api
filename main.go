@@ -15,11 +15,11 @@ import (
 	"time"
 )
 
-//	@title			进销存系统
-//	@version		1.0
-//	@description	以实现无纸化办公为目标
-//	@host
-//	@BasePath	/api/jxc
+// @title			进销存系统
+// @version		1.0
+// @description	以实现无纸化办公为目标
+// @host
+// @BasePath	/api/jxc
 func main() {
 	var (
 		db *gorm.DB
@@ -90,6 +90,7 @@ func initConfig(ctx context.Context) (app.CleanFunc, error) {
 	var (
 		err error
 	)
+	// todo 创建文件
 	//初始化配置
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")

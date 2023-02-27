@@ -18,7 +18,7 @@ type CargoKind struct {
 	CkCode string `json:"ck_code"`                 //货品编码
 	CkName string `json:"ck_name"`                 //货品名称
 	Intro  string `json:"intro"`                   //货品简介
-	Type   int    `json:"type"`                    //1:原材料 2:半成品 3:成品
+	Type   int    `json:"type"`                    //1物料 2制品
 	Status int    `json:"status" gorm:"default:1"` //状态 1 正常 8 删除
 }
 
@@ -36,11 +36,13 @@ type CargoAttr struct {
 // 货物
 type Cargo struct {
 	Model
-	CargoID   int    `json:"cargo_id" gorm:"primaryKey;autoIncrement"` //货品ID
-	CkID      int    `json:"ck_id"`                                    //货品种类ID
-	CargoName string `json:"cargo_name"`                               //货品名称
-	CargoCode string `json:"cargo_code"`                               //货品编码
-	Status    int    `json:"status" gorm:"default:1"`                  //状态 1 正常 8 删除
+	CargoID       int    `json:"cargo_id" gorm:"primaryKey;autoIncrement"` //货品ID
+	CkID          int    `json:"ck_id"`                                    //货品种类ID
+	CargoName     string `json:"cargo_name"`                               //货品名称
+	CargoCode     string `json:"cargo_code"`                               //货品编码
+	ThumbnailName string `json:"thumbnail_name"`                           //缩略图
+	ImageName     string `json:"image_name"`                               //大图
+	Status        int    `json:"status" gorm:"default:1"`                  //状态 1 正常 8 删除
 }
 
 type CargoAttrValue struct {
@@ -51,4 +53,13 @@ type CargoAttrValue struct {
 	AttrName  string `json:"attr_name"`               //属性名称
 	AttrValue string `json:"value"`                   //属性值
 	Status    int    `json:"status" gorm:"default:1"` //状态 1 正常 8 删除
+}
+
+type CargoProcess struct {
+	Model
+	ProcessID int     `json:"process_id" gorm:"primaryKey;autoIncrement"`
+	CargoID   int     `json:"cargo_id"`
+	Order     int     `json:"order"`
+	Dosage    float64 `json:"dosage"`
+	MeasureID int     `json:"measure_id"`
 }

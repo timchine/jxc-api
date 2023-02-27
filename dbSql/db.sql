@@ -57,3 +57,14 @@ CREATE TABLE `cargo_attr_value` (
  PRIMARY KEY (`cav_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='货品属性值表';
 
+
+CREATE TABLE `image` (
+    `image_id` int NOT NULL AUTO_INCREMENT,
+    `thumbnail_name` varchar(50) DEFAULT NULL COMMENT '缩略图',
+    `image_name` varchar(50) DEFAULT NULL COMMENT '大图',
+    `status` tinyint DEFAULT NULL COMMENT '1 未使用 2 被使用 8 删除',
+    `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`cav_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='图片';
+

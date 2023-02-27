@@ -20,4 +20,7 @@ func cargoRouter(r *gin.RouterGroup, db *gorm.DB) {
 	r.PUT("cargo", a.UpdateCargo())
 	r.GET("cargo/:cargo_id", a.GetCargo())
 	r.GET("cargo/_search", a.SearchCargo())
+
+	//上传图片 会生成一张缩略图一张原图
+	r.POST("/image", a.UploadImage())
 }

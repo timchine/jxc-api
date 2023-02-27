@@ -1,8 +1,11 @@
 package api
 
 import (
+	"crypto/md5"
 	"fmt"
+	"github.com/disintegration/imaging"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/timchine/jxc/api/dto"
 	"github.com/timchine/jxc/model"
 	"gorm.io/gorm"
@@ -21,6 +24,7 @@ type ICargoApi interface {
 	UpdateCargo() gin.HandlerFunc
 	GetCargo() gin.HandlerFunc
 	SearchCargo() gin.HandlerFunc
+	UploadImage() gin.HandlerFunc
 }
 
 type cargoApi struct {
@@ -296,6 +300,7 @@ func (c *cargoApi) AddCargo() gin.HandlerFunc {
 			res.Error(ctx, 500, "新增失败")
 			return
 		}
+		// todo 修改图片状态
 		tx.Commit()
 		res.Success(ctx)
 	}
@@ -344,6 +349,7 @@ func (c *cargoApi) DeleteCargo() gin.HandlerFunc {
 			res.Error(ctx, 500, "删除失败")
 			return
 		}
+		// todo 修改图片状态
 		tx.Commit()
 		res.Success(ctx)
 	}
@@ -370,6 +376,7 @@ func (c *cargoApi) UpdateCargo() gin.HandlerFunc {
 			return
 		}
 		tx := c.Begin()
+		// todo 如果图片更改 标记原有图片为未使用状态
 		err = tx.Where("cargo_id=?", req.Cargo.CargoID).Updates(&req.Cargo).Error
 		if err != nil {
 			tx.Rollback()
@@ -419,7 +426,7 @@ func (c *cargoApi) UpdateCargo() gin.HandlerFunc {
 				return
 			}
 		}
-
+		// todo 修改图片状态
 		tx.Commit()
 		res.Success(ctx)
 	}
@@ -512,5 +519,75 @@ func (c *cargoApi) SearchCargo() gin.HandlerFunc {
 		req.Data = data
 		req.TotalPage = math.Ceil(float64(req.Total) / float64(req.Size))
 		res.Success(ctx, req)
+	}
+}
+
+// @Summary		上传图片
+// @Description	上传图片
+// @Param			search	formData		file				true	"文件"
+// @Response		200		{object}	Response	"status 200 表示成功 否则提示msg内容"
+// @Router			/image [post]
+func (c *cargoApi) UploadImage() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var (
+			res   Response
+			image model.Image
+		)
+		file, err := ctx.FormFile("file")
+		if err != nil || file.Size < 200 {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "文件为空")
+			return
+		}
+		fr, err := file.Open()
+		var (
+			b = make([]byte, 200)
+		)
+		fr.Read(b[:100])
+		fr.ReadAt(b[100:], file.Size-100)
+		fr.Close()
+		imageHash := fmt.Sprintf("%x", md5.Sum(b))
+		// 查询图片
+		c.Where("image_hash=?", imageHash).First(&image)
+		if image.ImageID != 0 {
+			res.Success(ctx, image)
+			return
+		}
+		fr, err = file.Open()
+		if err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "文件为空")
+			return
+		}
+		img, err := imaging.Decode(fr)
+		if err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "文件为空")
+			return
+		}
+		img = imaging.Fill(img, 100, 100, imaging.Center, imaging.Lanczos)
+		fr.Close()
+		key := uuid.New().String()
+		err = imaging.Save(img, "static/upload/"+key)
+		if err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "保存文件失败")
+			return
+		}
+		image.ImageHash = imageHash
+		image.ThumbnailName = key
+		err = ctx.SaveUploadedFile(file, "static/upload/"+uuid.New().String())
+		if err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "保存文件失败")
+			return
+		}
+		image.ImageName = key
+		err = c.Create(&image).Error
+		if err != nil {
+			res.Error(ctx, 500, "保存文件失败")
+			return
+		}
+		res.Success(ctx, image)
 	}
 }
