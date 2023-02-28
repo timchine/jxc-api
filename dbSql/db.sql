@@ -15,7 +15,7 @@ CREATE TABLE `measure` (
    `cargo_id` int NOT NULL COMMENT '关联cargo',
    `is_base` tinyint(1) DEFAULT NULL COMMENT '是否为基准单位',
    `unit` varchar(50) DEFAULT NULL COMMENT '单位',
-   `calc` varchar(200) DEFAULT NULL COMMENT '单位换算公式',
+   `calc` decimal(10,9) DEFAULT NULL COMMENT '换算比例',
    `status` tinyint DEFAULT NULL COMMENT '1正常 8 删除',
    `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
    `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -39,6 +39,8 @@ CREATE TABLE `cargo` (
   `ck_id` int NOT NULL COMMENT '关联cargo_kind',
   `cargo_name` varchar(50) DEFAULT NULL COMMENT '货物名称',
   `cargo_code` varchar(50) DEFAULT NULL COMMENT '货物编码',
+  `thumbnail_name` varchar(50) DEFAULT NULL COMMENT '缩略图',
+  `image_name` varchar(50) DEFAULT NULL COMMENT '大图',
   `status` tinyint DEFAULT NULL COMMENT '1正常 8 删除',
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -62,9 +64,10 @@ CREATE TABLE `image` (
     `image_id` int NOT NULL AUTO_INCREMENT,
     `thumbnail_name` varchar(50) DEFAULT NULL COMMENT '缩略图',
     `image_name` varchar(50) DEFAULT NULL COMMENT '大图',
+    `image_hash` varchar(50) DEFAULT NULL COMMENT '图片hash值',
     `status` tinyint DEFAULT NULL COMMENT '1 未使用 2 被使用 8 删除',
     `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`cav_id`)
+    PRIMARY KEY (`image_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='图片';
 

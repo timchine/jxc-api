@@ -25,6 +25,7 @@ func routers(r *gin.RouterGroup, db *gorm.DB) {
 func Run(db *gorm.DB) app.DaemonFunc {
 	return func(ctx context.Context) error {
 		router := gin.New()
+		router.Static("/static/upload", "./static/upload")
 		router.Use(LogHandler, Recovery)
 		routers(router.Group("/api/jxc/"), db)
 		return router.Run(viper.GetString("server.addr"))

@@ -3,12 +3,12 @@ package model
 // 计量
 type Measure struct {
 	Model
-	MeasureID int    `json:"measure_id"`
-	CargoID   int    `json:"cargo_id"`                //关联货品
-	IsBase    bool   `json:"is_base"`                 //是否为基础计量单位
-	Unit      string `json:"unit"`                    //单位
-	Calc      string `json:"calc"`                    //换算公式
-	Status    int    `json:"status" gorm:"default:1"` //状态 1 正常 8 删除
+	MeasureID int     `json:"measure_id"`
+	CargoID   int     `json:"cargo_id"`                //关联货品
+	IsBase    bool    `json:"is_base"`                 //是否为基础计量单位
+	Unit      string  `json:"unit"`                    //单位
+	Calc      float64 `json:"calc"`                    //换算比例
+	Status    int     `json:"status" gorm:"default:1"` //状态 1 正常 8 删除
 }
 
 // 货物 分类
@@ -60,6 +60,7 @@ type CargoProcess struct {
 	ProcessID int     `json:"process_id" gorm:"primaryKey;autoIncrement"`
 	CargoID   int     `json:"cargo_id"`
 	Order     int     `json:"order"`
+	IsExact   bool    `json:"is_exact"`
 	Dosage    float64 `json:"dosage"`
 	MeasureID int     `json:"measure_id"`
 }

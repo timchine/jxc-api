@@ -10,6 +10,7 @@ import (
 	"github.com/timchine/jxc/model"
 	"gorm.io/gorm"
 	"math"
+	"path"
 	"strconv"
 )
 
@@ -300,7 +301,6 @@ func (c *cargoApi) AddCargo() gin.HandlerFunc {
 			res.Error(ctx, 500, "新增失败")
 			return
 		}
-		// todo 修改图片状态
 		tx.Commit()
 		res.Success(ctx)
 	}
@@ -349,7 +349,6 @@ func (c *cargoApi) DeleteCargo() gin.HandlerFunc {
 			res.Error(ctx, 500, "删除失败")
 			return
 		}
-		// todo 修改图片状态
 		tx.Commit()
 		res.Success(ctx)
 	}
@@ -376,7 +375,6 @@ func (c *cargoApi) UpdateCargo() gin.HandlerFunc {
 			return
 		}
 		tx := c.Begin()
-		// todo 如果图片更改 标记原有图片为未使用状态
 		err = tx.Where("cargo_id=?", req.Cargo.CargoID).Updates(&req.Cargo).Error
 		if err != nil {
 			tx.Rollback()
@@ -426,7 +424,6 @@ func (c *cargoApi) UpdateCargo() gin.HandlerFunc {
 				return
 			}
 		}
-		// todo 修改图片状态
 		tx.Commit()
 		res.Success(ctx)
 	}
@@ -524,7 +521,7 @@ func (c *cargoApi) SearchCargo() gin.HandlerFunc {
 
 // @Summary		上传图片
 // @Description	上传图片
-// @Param			search	formData		file				true	"文件"
+// @Param			file	formData		file				true	"文件"
 // @Response		200		{object}	Response	"status 200 表示成功 否则提示msg内容"
 // @Router			/image [post]
 func (c *cargoApi) UploadImage() gin.HandlerFunc {
@@ -539,6 +536,8 @@ func (c *cargoApi) UploadImage() gin.HandlerFunc {
 			res.Error(ctx, 500, "文件为空")
 			return
 		}
+		ext := path.Ext(file.Filename)
+
 		fr, err := file.Open()
 		var (
 			b = make([]byte, 200)
@@ -566,23 +565,25 @@ func (c *cargoApi) UploadImage() gin.HandlerFunc {
 			return
 		}
 		img = imaging.Fill(img, 100, 100, imaging.Center, imaging.Lanczos)
-		fr.Close()
+
 		key := uuid.New().String()
-		err = imaging.Save(img, "static/upload/"+key)
+		err = imaging.Save(img, "static/upload/"+key+ext)
 		if err != nil {
 			Log().Error(err.Error())
 			res.Error(ctx, 500, "保存文件失败")
 			return
 		}
+		fr.Close()
 		image.ImageHash = imageHash
-		image.ThumbnailName = key
-		err = ctx.SaveUploadedFile(file, "static/upload/"+uuid.New().String())
+		image.ThumbnailName = key + ext
+		fileName := uuid.New().String() + ext
+		err = ctx.SaveUploadedFile(file, "static/upload/"+fileName)
 		if err != nil {
 			Log().Error(err.Error())
 			res.Error(ctx, 500, "保存文件失败")
 			return
 		}
-		image.ImageName = key
+		image.ImageName = fileName
 		err = c.Create(&image).Error
 		if err != nil {
 			res.Error(ctx, 500, "保存文件失败")

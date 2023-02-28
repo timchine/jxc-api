@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"os"
 	"time"
 )
 
@@ -90,7 +91,11 @@ func initConfig(ctx context.Context) (app.CleanFunc, error) {
 	var (
 		err error
 	)
-	// todo 创建文件
+	// 创建文件
+	file, err := os.Stat("./static/upload/")
+	if os.IsNotExist(err) || file == nil {
+		os.MkdirAll("./static/upload", os.ModePerm)
+	}
 	//初始化配置
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
