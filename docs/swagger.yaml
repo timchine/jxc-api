@@ -46,9 +46,15 @@ definitions:
         type: integer
       created_at:
         type: integer
+      image_name:
+        description: 大图
+        type: string
       status:
         description: 状态 1 正常 8 删除
         type: integer
+      thumbnail_name:
+        description: 缩略图
+        type: string
       updated_at:
         type: integer
     type: object
@@ -121,7 +127,7 @@ definitions:
         description: 状态 1 正常 8 删除
         type: integer
       type:
-        description: 1:原材料 2:半成品 3:成品
+        description: 1物料 2制品
         type: integer
       updated_at:
         type: integer
@@ -345,4 +351,19 @@ paths:
           schema:
             $ref: '#/definitions/dto.CargoKindWithAttrs'
       summary: 获取货品详情
+  /image:
+    post:
+      description: 上传图片
+      parameters:
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      responses:
+        "200":
+          description: status 200 表示成功 否则提示msg内容
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 上传图片
 swagger: "2.0"
