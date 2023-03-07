@@ -26,6 +26,9 @@ type ICargoApi interface {
 	GetCargo() gin.HandlerFunc
 	SearchCargo() gin.HandlerFunc
 	UploadImage() gin.HandlerFunc
+	AddCargoProcesses() gin.HandlerFunc
+	UpdateCargoProcesses() gin.HandlerFunc
+	CargoProcesses() gin.HandlerFunc
 }
 
 type cargoApi struct {
@@ -590,5 +593,92 @@ func (c *cargoApi) UploadImage() gin.HandlerFunc {
 			return
 		}
 		res.Success(ctx, image)
+	}
+}
+
+// @Summary		新增制品生产流程
+// @Description	新增制品生产流程
+// @Param			processes	body		[]model.CargoProcess				true	"文件"
+// @Response		200		{object}	Response	"status 200 表示成功 否则提示msg内容"
+// @Router			/cargo_process [post]
+func (c *cargoApi) AddCargoProcesses() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var (
+			processes []model.CargoProcess
+			err       error
+			res       Response
+		)
+		if err = ctx.ShouldBindJSON(&processes); err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "参数错误")
+			return
+		}
+		err = c.Create(&processes).Error
+		if err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "新增失败")
+			return
+		}
+		res.Success(ctx)
+	}
+}
+
+// @Summary		修改制品生产流程
+// @Description	修改制品生产流程
+// @Param			processes	body		[]model.CargoProcess				true	"文件"
+// @Response		200		{object}	Response	"status 200 表示成功 否则提示msg内容"
+// @Router			/cargo_process [put]
+func (c *cargoApi) UpdateCargoProcesses() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var (
+			processes []model.CargoProcess
+			err       error
+			res       Response
+		)
+		if err = ctx.ShouldBindJSON(&processes); err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "参数错误")
+			return
+		}
+		for _, v := range processes {
+			err = c.Where("process_id=?", v.ProcessID).Updates(&v).Error
+			if err != nil {
+				Log().Error(err.Error())
+				res.Error(ctx, 500, "新增失败")
+				return
+			}
+		}
+		res.Success(ctx)
+	}
+}
+
+// @Summary		获取制品生产流程
+// @Description	通过cargo_id制品生产流程
+// @Param			cargo_id	path		int						true	"货品ID"
+// @Response		200		{object}	[]model.CargoProcess	"status 200 表示成功 否则提示msg内容"
+// @Router			/cargo_process/{cargo_id} [put]
+func (c *cargoApi) CargoProcesses() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var (
+			cargoId   int
+			err       error
+			res       Response
+			processes []model.CargoProcess
+		)
+		id := ctx.Param("cargo_id")
+		cargoId, err = strconv.Atoi(id)
+		if err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "参数错误")
+			return
+		}
+		err = c.Model(&model.CargoProcess{}).
+			Where("cargo_id=?", cargoId).Find(&processes).Error
+		if err != nil {
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "新增失败")
+			return
+		}
+		res.Success(ctx)
 	}
 }

@@ -71,3 +71,17 @@ CREATE TABLE `image` (
     PRIMARY KEY (`image_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='图片';
 
+
+
+CREATE TABLE `cargo_process` (
+    `process_id` int NOT NULL AUTO_INCREMENT,
+    `cargo_id` int NOT NULL COMMENT '关联cargo',
+    `order` int NOT NULL COMMENT '生产顺序',
+    `is_exact` tinyint(1) DEFAULT NULL COMMENT '是否精准',
+    `max_use` decimal(10,9) DEFAULT NULL COMMENT '使用上限',
+    `min_use` decimal(10,9) DEFAULT NULL COMMENT '使用上下限',
+    `measure_id` int NOT NULL COMMENT '关联measure, 计量单位',
+    `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`process_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='生产流程';
