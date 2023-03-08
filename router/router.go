@@ -20,6 +20,7 @@ func routers(r *gin.RouterGroup, db *gorm.DB) {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	customerRouter(r, db)
 	cargoRouter(r, db)
+	storeRouter(r, db)
 }
 
 func Run(db *gorm.DB) app.DaemonFunc {

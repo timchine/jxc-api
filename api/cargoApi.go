@@ -304,6 +304,14 @@ func (c *cargoApi) AddCargo() gin.HandlerFunc {
 			res.Error(ctx, 500, "新增失败")
 			return
 		}
+		err = tx.Create(&model.CargoStore{CargoID: req.Cargo.CargoID}).Error
+		if err != nil {
+			tx.Rollback()
+			Log().Error(err.Error())
+			res.Error(ctx, 500, "新增失败")
+			return
+		}
+
 		tx.Commit()
 		res.Success(ctx)
 	}
