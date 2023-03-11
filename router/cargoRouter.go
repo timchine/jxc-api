@@ -23,4 +23,9 @@ func cargoRouter(r *gin.RouterGroup, db *gorm.DB) {
 
 	//上传图片 会生成一张缩略图一张原图
 	r.POST("/image", a.UploadImage())
+
+	//制品生产流程
+	r.POST("/cargo_process", a.AddCargoProcesses())
+	r.PUT("/cargo_process", a.UpdateCargoProcesses())
+	r.GET("/cargo_process/:cargo_id", a.CargoProcesses())
 }

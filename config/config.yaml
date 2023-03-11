@@ -1,6 +1,6 @@
 mysql:
-#  host: 116.233.120.95
-  host: 127.0.0.1
+  host: 116.232.101.55
+#  host: 127.0.0.1
   port: 3306
   password: jxc123456.
   username: root

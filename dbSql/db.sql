@@ -71,3 +71,33 @@ CREATE TABLE `image` (
     PRIMARY KEY (`image_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='图片';
 
+
+
+CREATE TABLE `cargo_process` (
+    `process_id` int NOT NULL AUTO_INCREMENT,
+    `cargo_id` int NOT NULL COMMENT '关联cargo',
+    `order` int NOT NULL COMMENT '生产顺序',
+    `is_exact` tinyint(1) DEFAULT NULL COMMENT '是否精准',
+    `max_use` decimal(10,9) DEFAULT NULL COMMENT '使用上限',
+    `min_use` decimal(10,9) DEFAULT NULL COMMENT '使用上下限',
+    `measure_id` int NOT NULL COMMENT '关联measure, 计量单位',
+    `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`process_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='生产流程';
+
+
+CREATE TABLE `cargo_store` (
+     `cs_id` int NOT NULL AUTO_INCREMENT,
+     `cargo_id` int NOT NULL COMMENT '关联cargo',
+     `surplus` decimal(10, 9) NOT NULL COMMENT '库存余量',
+     `pre_out` decimal(10,9) DEFAULT NULL COMMENT '准备出库',
+     `usable` decimal(10,9) DEFAULT NULL COMMENT '可用',
+     `pre_put` decimal(10,9) DEFAULT NULL COMMENT '准备入库',
+     `up_warning` decimal(10,9) NOT NULL COMMENT '库存告警',
+     `low_warning` decimal(10,9) NOT NULL COMMENT '库存告警',
+     `warning_status` tinyint(1) NOT NULL COMMENT '状态 1 开启上限 2 开启下限',
+     `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+     `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     PRIMARY KEY (`cs_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='货品库存';

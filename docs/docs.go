@@ -304,6 +304,86 @@ const docTemplate = `{
                 }
             }
         },
+        "/cargo_process": {
+            "put": {
+                "description": "修改制品生产流程",
+                "summary": "修改制品生产流程",
+                "parameters": [
+                    {
+                        "description": "文件",
+                        "name": "processes",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CargoProcess"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "新增制品生产流程",
+                "summary": "新增制品生产流程",
+                "parameters": [
+                    {
+                        "description": "文件",
+                        "name": "processes",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CargoProcess"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/cargo_process/{cargo_id}": {
+            "put": {
+                "description": "通过cargo_id制品生产流程",
+                "summary": "获取制品生产流程",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "货品ID",
+                        "name": "cargo_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status 200 表示成功 否则提示msg内容",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.CargoProcess"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/image": {
             "post": {
                 "description": "上传图片",
@@ -518,12 +598,50 @@ const docTemplate = `{
                 }
             }
         },
+        "model.CargoProcess": {
+            "type": "object",
+            "properties": {
+                "cargo_id": {
+                    "description": "关联货品 cargo",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "is_exact": {
+                    "description": "是否精准",
+                    "type": "boolean"
+                },
+                "max_use": {
+                    "description": "当用量是精准时， 取最大值， 否则为区间",
+                    "type": "number"
+                },
+                "measure_id": {
+                    "description": "计量单位 关联 measure",
+                    "type": "integer"
+                },
+                "min_use": {
+                    "description": "当用量是精准时， 取最大值， 否则为区间",
+                    "type": "number"
+                },
+                "order": {
+                    "description": "生产顺序",
+                    "type": "integer"
+                },
+                "process_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Measure": {
             "type": "object",
             "properties": {
                 "calc": {
-                    "description": "换算公式",
-                    "type": "string"
+                    "description": "换算比例",
+                    "type": "number"
                 },
                 "cargo_id": {
                     "description": "关联货品",

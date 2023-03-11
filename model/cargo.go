@@ -58,9 +58,10 @@ type CargoAttrValue struct {
 type CargoProcess struct {
 	Model
 	ProcessID int     `json:"process_id" gorm:"primaryKey;autoIncrement"`
-	CargoID   int     `json:"cargo_id"`
-	Order     int     `json:"order"`
-	IsExact   bool    `json:"is_exact"`
-	Dosage    float64 `json:"dosage"`
-	MeasureID int     `json:"measure_id"`
+	CargoID   int     `json:"cargo_id"`   // 关联货品 cargo
+	Order     int     `json:"order"`      //生产顺序
+	IsExact   bool    `json:"is_exact"`   //是否精准
+	MaxUse    float64 `json:"max_use"`    //当用量是精准时， 取最大值， 否则为区间
+	MinUse    float64 `json:"min_use"`    //当用量是精准时， 取最大值， 否则为区间
+	MeasureID int     `json:"measure_id"` //计量单位 关联 measure
 }
